@@ -4,8 +4,9 @@
 
 
 
-function send()
+function send
 {
+	timestamp=$(date +%s)
 	echo 'User ?'
 	read a
 	user_for_save=$a
@@ -19,21 +20,27 @@ function send()
 	echo -e 'What world ?\n'$(ls ./AppData/Roaming/.minecraft/saves)
 	read a
 	to_save=$a
-	if cd ./AppData/Roaming/.minecraft/saves/$to_save 2> /dev/null
+	if cd /mnt/c/Users/$user_for_save/AppData/Roaming/.minecraft/saves/$to_save 2> /dev/null
 	then
-		cp ./AppData/Roaming/.minecraft/saves/$to_save ./minecraft_save/$to_save	
+		if cd /mnt/c/Users/$user_for_save/minecraft_saves/Minecraft_save/$to_save 2> /dev/null
+		then
+			cp -r /mnt/c/Users/$user_for_save/AppData/Roaming/.minecraft/saves/$to_save/ /mnt/c/Users/$user_for_save/minecraft_saves/Minecraft_save/$to_save/
+		else
+			mkdir /mnt/c/Users/$user_for_save/minecraft_saves/Minecraft_save/$to_save
+			cp -r /mnt/c/Users/$user_for_save/AppData/Roaming/.minecraft/saves/$to_save/ /mnt/c/Users    /$user_for_save/minecraft_saves/Minecraft_save/$to_save/
+		fi	
 	else
 		echo 'Inexistant world'
 		exit
 	fi
-	git add ./minecraft_save/$to_save
-	git commit -m #ajouter timestemp
+	git add /mnt/c/Users/$user_for_save/minecraft_saves/Minecraft_save/$to_save/*
+	git commit -m $timestamp
 	git push
 }
 
-if [ $1 = "-s" ]
+if [ "$1" = "-s" ]
 then
-	echo 'test'
+	send
 else
 	echo 'Pas encore code'
 fi
